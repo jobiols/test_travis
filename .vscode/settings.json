@@ -1,0 +1,21 @@
+{
+    "python.linting.pylintArgs": [
+        "--load-plugins","pylint_odoo","-d","C0114,C8101,E0401,C0115"
+    ],
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "restructuredtext.confPath": "",
+
+    "sqltools.connections": [
+        {
+            "database": "gabriel_prod",
+            "driver": "PostgreSQL",
+            "name": "gabriel_prod",
+            "password": "odoo",
+            "port": 5432,
+            "previewLimit": 50,
+            "server": "localhost",
+            "username": "odoo"
+        }
+    ],
+}

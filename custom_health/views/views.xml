@@ -1,0 +1,122 @@
+<odoo>
+  <data>
+
+
+  <record id="oeh_medical_appointment_view_custom_quil" model="ir.ui.view">
+      <field name="name">oeh.medical.appointment quil</field>
+      <field name="model">oeh.medical.appointment</field>
+      <field name="inherit_id" ref="oehealth_all_in_one.oeh_medical_appointment_view"/>
+      <field name="arch" type="xml">
+          <data>
+              <xpath expr="//field[@name='state']" position="replace">
+                      <field name="state" 
+                        widget="statusbar" 
+                        statusbar_visible="Draft,Scheduled,Invoiced,Received,Measuring,Consultation,Completed" 
+                        statusbar_colors="{&quot;Scheduled&quot;:&quot;blue&quot;,&quot;Confirmed&quot;:&quot;green&quot;,&quot;Invoiced&quot;:&quot;grey&quot;}"
+                        />
+
+              </xpath>
+              <xpath expr="//field[@name='doctor']" position="after">
+                      <field name="medical_referred"  groups="oehealth_all_in_one.group_oeh_medical_physician,oehealth_all_in_one.group_oeh_medical_manager" />
+              </xpath>
+
+              <xpath expr="//button[@name='set_to_completed']" position="replace">
+                  <button confirm="¿Está seguro que desea marcar esta cita como completada?" name="set_to_completed" states="Consultation" string="Marcar como Atendida" type="object" class="oe_highlight" groups="oehealth_all_in_one.group_oeh_medical_physician,oehealth_all_in_one.group_oeh_medical_manager"/>
+              </xpath>
+
+                <xpath expr="//form[1]/sheet[1]/group[1]" position="after">
+                  <group name="buttom">
+                    <group name="buttom_left">
+                       <field name="additional_practice"  invisible="1"/>
+                       <button confirm="¿Está seguro que desea crear otra factura " name="action_appointment_invoice_create"  attrs="{'invisible':[('additional_practice','=',False)]}" string="Crear Factura" type="object" class="oe_highlight" />
+                   </group>
+                  </group>
+                </xpath>
+
+              <xpath expr="//button[@name='action_appointment_invoice_create']" position="replace">
+                  <button confirm="¿Está seguro que desea volver a borrador?" name="set_to_draft" states="Scheduled" string="Volver a borrador" type="object" class="oe_highlight" groups="oehealth_all_in_one.group_oeh_medical_physician,oehealth_all_in_one.group_oeh_medical_manager"/>
+                  <button confirm="¿Está seguro que desea crear una factura?" name="action_appointment_invoice_create" states="Scheduled" string="Facturar" type="object" class="oe_highlight" groups="oehealth_all_in_one.group_oeh_medical_physician,oehealth_all_in_one.group_oeh_medical_manager" />
+                  <button  name="set_to_scheduled" states="Draft" string="Pasar a Planificado" type="object" class="oe_highlight" groups="oehealth_all_in_one.group_oeh_medical_physician,oehealth_all_in_one.group_oeh_medical_manager" />
+
+                  <button confirm="¿Está seguro que desea pasar a ADMITIDO-PENDIENTE DE MEDICIÓN?" name="set_to_measuring" states="Received" string="Pasar a medicion" type="object" class="oe_highlight" groups="oehealth_all_in_one.group_oeh_medical_physician,oehealth_all_in_one.group_oeh_medical_manager" />
+                  <button confirm="¿Está seguro que desea pasar a ADMITIDO-PENDIENTE DE CONSULTA?" name="set_to_consultation" states="Received,Measuring" string="Pasar a consulta" type="object" class="oe_highlight" groups="oehealth_all_in_one.group_oeh_medical_physician,oehealth_all_in_one.group_oeh_medical_manager"/>
+
+              </xpath>
+
+          </data>
+      </field>
+  </record>
+  <record id="product_pricelist_item_tree_view_quik" model="ir.ui.view">
+      <field name="name">product.pricelist.item.tree.view.qui quil</field>
+      <field name="model">product.pricelist</field>
+      <field name="inherit_id" ref="product.product_pricelist_view"/>
+      <field name="arch" type="xml">
+           <xpath expr="//field[@name='date_start']" position="before">
+              <field name="name" />
+              <field name="social_work_price" groups="oehealth_all_in_one.group_oeh_medical_manager"/>
+              <field name="coinsurance_price"/>
+              <field name="duration" string="Duracion" widget="float_time"/>
+              <field name="observation" />
+              <field name="additional_practice"  />        
+            </xpath>
+
+      </field>
+    </record>
+
+
+
+  <record id="product_pricelist_item_tree_form_quik" model="ir.ui.view">
+      <field name="name">product.pricelist.item.tree.form.qui quil</field>
+      <field name="model">product.pricelist.item</field>
+      <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+      <field name="arch" type="xml">
+           <xpath expr="//field[@name='date_end']" position="after">
+              <field name="name" />
+              <field name="social_work_price"/>
+              <field name="coinsurance_price"/>
+              <field name="duration" string="Duracion" widget="float_time"/>
+              <field name="observation" />
+              <field name="additional_practice" />
+            </xpath>
+
+      </field>
+    </record>
+
+    <record id="oeh_medical_appointment_action__referido_tree" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="res_model">oeh.medical.appointment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('medical_referred', '=', active_id)]</field>
+        <field name="context">{'default_medical_referred': active_id}</field>
+        <field name="view_id" eval="False"/>
+    </record>
+
+
+
+
+
+
+    <record id="oeh_medical_physician_view" model="ir.ui.view">
+      <field name="name">CUSTOM HEALTH add turnero and appointment buttons</field>
+      <field name="model">oeh.medical.physician</field>
+      <field name="inherit_id" ref="oehealth_all_in_one.oeh_medical_physician_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//button" position="before">
+          <button type="object" string="PROCESAR TURNERO" class="oe_stat_button" 
+                  name="create_appointment_doctor" 
+                  icon="fa-gear" />
+        </xpath>
+        <xpath expr="//div[@name='buttons']" position="inside">
+          <button type="action" class="oe_stat_button" 
+                  name="%(oeh_medical_appointment_action__referido_tree)d" 
+                  context="{'default_medical_referred': active_id}" 
+                  icon="fa-calendar">
+              <field string="Citas Referidas" name="app_count_referred" widget="statinfo"/>
+          </button>
+        </xpath>
+      </field>
+    </record>
+
+  </data>
+</odoo>

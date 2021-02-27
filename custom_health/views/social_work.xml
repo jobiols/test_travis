@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding='UTF-8'?>
+
+<odoo>
+
+
+
+    <!-- Obra social -->
+
+<!--
+    <record id="social_work_tree" model="ir.ui.view"> 
+      <field name="name">Obra social</field> 
+      <field name="model">social.work</field> 
+      <field name="arch" type="xml">
+        <tree>
+            <field name="code" />
+            <field name="name" />
+            <field name="plan_id" invisible="1"/>
+            <field name="price_list_id" />
+        </tree>
+      </field>
+    </record>
+
+   <record id="social_work_form" model="ir.ui.view"> 
+      <field name="name">Obra social </field> 
+      <field name="model">social.work</field> 
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <div class="oe_title">
+                  <h1>
+                    <label string="Obra social "/>
+                  </h1>
+            </div>
+            <group col="4">
+                <field name="code" />
+                <field name="name"  string="Nombre" />
+                <field name="plan_id" string="Planes" context="{'default_social_work_id': id}" invisible="1"/>
+                <field name="price_list_id" options="{'no_create': True}" />
+            </group>
+          </sheet>
+
+
+	    </form>    
+    </field>    
+    </record>
+
+        <record id="action_social_work_quil" model="ir.actions.act_window">
+            <field name="name">Obra Social</field>
+            <field name="res_model">social.work</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+        </record>
+
+        <menuitem
+            id="social_work"
+            name="Obra Social"
+            parent="oehealth_all_in_one.oeh_medical_conf_menu"
+            action="action_social_work_quil"
+            sequence="17"/>
+-->
+
+
+  <record id="social_work_form_appointment" model="ir.ui.view"> 
+    <field name="name">Obra social </field> 
+    <field name="model">oeh.medical.appointment</field> 
+    <field name="inherit_id" ref="oehealth_all_in_one.oeh_medical_appointment_view"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='doctor']" position="before">
+        <field name="social_work_id" options="{'no_create': True}"  />
+        <field name="plan_id" options="{'no_create': True}" />
+        <field name="price_list_id" string="Nomenclador" options="{'no_create': True}" />
+      </xpath>
+      <xpath expr="//field[@name='evaluation_ids']" position="replace">
+            <field name="evaluation_ids" 
+                   widget="one2many_list" 
+                   context="{'default_appointment': id, 'default_patient': patient, 'default_doctor':doctor, 'default_evaluation_start_date': appointment_date}"/>
+      </xpath>
+    </field>    
+  </record>
+
+  <record id="social_work_form_patient" model="ir.ui.view"> 
+    <field name="name">Obra social </field> 
+    <field name="model">oeh.medical.patient</field> 
+    <field name="inherit_id" ref="oehealth_all_in_one.oeh_medical_patient_view"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='sex']" position="after">
+        <field name="social_work_id" />
+        <field name="plan_id"/>
+      </xpath>
+    </field>    
+  </record>
+
+  <!-- Fin obra social  -->
+
+
+ <!-- Planes  -->
+ 
+  <record model="ir.ui.view" id="oeh_medical_planes_tree">
+    <field name="name">Planes</field>
+    <field name="model">plan</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+      <tree string='Planes' editable="bottom">
+        <field name="name"/>
+        <field name="social_work_id"/>
+      </tree>
+    </field>
+  </record>
+    <record model="ir.ui.view" id="oeh_medical_planes_form">
+    <field name="name">Planes</field>
+    <field name="model">plan</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+      <form string='Planes'>
+          <field name="name"/>
+          <field name="social_work_id"/>
+      </form>
+    </field>
+  </record>
+
+  <record id="oeh_medical_planes_action" model="ir.actions.act_window">
+    <field name="name">Planes</field>
+    <field name="res_model">plan</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="target">current</field>
+  </record> 
+
+  <menuitem id="oeh_medical_obra_socia_menu" action="oeh_medical_planes_action"  
+            parent="oehealth_all_in_one.oeh_medical_conf_insurances" 
+            sequence="10"/>
+
+</odoo>
